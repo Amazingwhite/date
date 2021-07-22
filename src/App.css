@@ -126,3 +126,15 @@ button {
   padding: 10px 20px;
   border-radius: 4px;
 }
+
+.valuableEvent {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  color: #FFF;
+}
+
+.valuableEvent input[type="date"], input[type="text"], input[type="time"] {
+  margin-left: 5px;
+  height: 40px;
+}

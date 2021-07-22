@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import UserInfo from "./components/UserInfo";
 import { ErrorMessage } from "@hookform/error-message";
-import { getMinutes, getHours, getDate, getMonth, getYear, yearsToMonths, isAfter, isEqual, set, differenceInMonths, differenceInDays, differenceInYears, getDaysInYear, getDaysInMonth, monthsToYears, addYears, differenceInMinutes, differenceInHours, minutesToHours, } from 'date-fns'
+import { getMinutes, getHours, getDate, getMonth, getYear, yearsToMonths, isAfter, isEqual, set, differenceInMonths, differenceInDays, differenceInYears, getDaysInYear, getDaysInMonth, monthsToYears, addYears, differenceInMinutes, differenceInHours, minutesToHours, setMonth, } from 'date-fns'
 import ru from "date-fns/locale/ru"
 import './App.css'
 
@@ -14,18 +14,13 @@ export default function App() {
   const { register, formState: { errors }, handleSubmit, reset } = useForm({ criteriaMode: "all" });
 
   const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
-  const countYears = (d1, d2) => (yearsToMonths(getYear(d1)) + (getMonth(d1) + 1) - (yearsToMonths(getYear(d2)) + (getMonth(d2) + 1))) / 12
 
   const timeCounter = (date1, date2) => {
     let firstDate = new Date(date1)
     let secondDate = new Date(date2)
-
+    
     let diffInMinutes = differenceInMinutes(secondDate, firstDate)
     let diffInHours = differenceInHours(secondDate, firstDate)
-    let diffInDays = differenceInDays(secondDate, firstDate)
-    let diffInMonths = differenceInMonths(secondDate, firstDate)
-    let diffInYears = differenceInYears(secondDate, firstDate)
-
     let minutes = diffInMinutes - diffInHours*60
     let hours = minutesToHours(diffInMinutes)
     let days = 0
@@ -36,20 +31,16 @@ export default function App() {
       days++
       hours -=24
     }
-    console.log(getDaysInMonth(new Date(getYear(secondDate) ,getMonth(secondDate))));
-    // while(days > getDaysInMonth(new Date(getYear(secondDate) ,getMonth(secondDate)))){ 
-      
-    //   months++
-    //   days -= getDaysInMonth(new Date(secondDate))
-    // }
-
-
-
-
-    
-    let countedDiff = [years, months, days, hours, minutes]
-    console.log(countedDiff)
-    setUntilEvent(countedDiff)
+    while(days >= getDaysInMonth(new Date(getYear(secondDate) ,getMonth(secondDate) - 1))){ 
+      secondDate = setMonth(secondDate, getMonth(secondDate)-1)
+      months++
+      days -= getDaysInMonth(new Date(secondDate))
+    }
+    while(months >=12) {
+      years++
+      months -=12
+    }
+    setUntilEvent([years, months, days, hours, minutes])
   }
 
   const onSubmit = (data) => {

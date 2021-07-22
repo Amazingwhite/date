@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import UserInfo from "./components/UserInfo";
+import { UserInfo } from "./components/UserInfo";
 import { ErrorMessage } from "@hookform/error-message";
-import { getMinutes, getHours, getMonth, getYear, isAfter, set, getDaysInMonth, differenceInMinutes, differenceInHours, minutesToHours, setMonth, getDate} from 'date-fns'
+import { getMinutes, getHours, getMonth, getYear, isAfter, set, differenceInMinutes, differenceInHours,  getDate } from 'date-fns'
 import './App.css'
 
 export default function App() {
@@ -17,66 +17,70 @@ export default function App() {
   const timeCounter = (date1, date2) => {
     let firstDate = new Date(date1)
     let secondDate = new Date(date2)
-    let diffInMinutes = differenceInMinutes(secondDate, firstDate)
-    let diffInHours = differenceInHours(secondDate, firstDate)
-    let minutes = diffInMinutes - diffInHours * 60
-    let hours = minutesToHours(diffInMinutes)
-    let days = 0
-    let months = 0
-    let years = 0
 
     if (isAfter(firstDate, secondDate)) {
-      let temp
-      temp = firstDate
-      firstDate = secondDate
-      secondDate = temp
-      diffInMinutes = differenceInMinutes(secondDate, firstDate)
-      diffInHours = differenceInHours(secondDate, firstDate)
-      minutes = diffInMinutes - diffInHours * 60
-      hours = minutesToHours(diffInMinutes)
-      while (hours > 23) {
-        days++
-        hours -= 24
+      if (differenceInMinutes(firstDate, secondDate) < 1440) {
+        let diffHours = differenceInHours(firstDate, secondDate)
+        let diffMinutes = differenceInMinutes(firstDate, secondDate) - diffHours * 60 +1
+        if(diffMinutes === 60) {
+          diffHours++
+          diffMinutes=0
+        }
+        setUntilEvent({hours: diffHours, minutes: diffMinutes})
+        setBeforeAfter(false)
+      } else {
+        let diff = set(new Date(), {
+          year: getYear(firstDate) - getYear(secondDate),
+          month: getMonth(firstDate) - getMonth(secondDate),
+          date: getDate(firstDate) - getDate(secondDate),
+          hours: getHours(firstDate) - getHours(secondDate),
+          minutes: getMinutes(firstDate) - getMinutes(secondDate)
+        })
+        setUntilEvent({
+          years: getYear(diff),
+          months: getMonth(diff),
+          days: getDate(diff),
+          hours: getHours(diff),
+          minutes: getMinutes(diff)
+        })
+        setBeforeAfter(false)
       }
-      while (days >= getDaysInMonth(new Date(getYear(firstDate), getMonth(firstDate) + 1))) {
-        firstDate = setMonth(firstDate, getMonth(firstDate) + 1)
-        months++
-        days -= getDaysInMonth(new Date(firstDate))
-      }
-      while (months >= 12) {
-        years++
-        months -= 12
-      }
-      setBeforeAfter(false)
+      
     } else {
-      while (hours > 23) {
-        days++
-        hours -= 24
+      if (differenceInMinutes(secondDate, firstDate) < 1440) {
+        let diffHours = differenceInHours(secondDate, firstDate)
+        let diffMinutes = differenceInMinutes(secondDate, firstDate) - diffHours * 60
+        setUntilEvent({hours: diffHours, minutes: diffMinutes})
+        setBeforeAfter(true)
+      } else {
+        let diff = set(new Date(), {
+          year: getYear(secondDate) - getYear(firstDate),
+          month: getMonth(secondDate) - getMonth(firstDate),
+          date: (getDate(secondDate) - getDate(firstDate)),
+          hours: getHours(secondDate) - getHours(firstDate),
+          minutes: getMinutes(secondDate) - getMinutes(firstDate)
+        })
+        setUntilEvent({
+          years: getYear(diff),
+          months: getMonth(diff),
+          days: getDate(diff),
+          hours: getHours(diff),
+          minutes: getMinutes(diff)
+        })
+        setBeforeAfter(true)
       }
-      while (days >= getDaysInMonth(new Date(getYear(secondDate), getMonth(secondDate) - 1))) {
-        secondDate = setMonth(secondDate, getMonth(secondDate) - 1)
-        months++
-        days -= getDaysInMonth(new Date(secondDate))
-      }
-      while (months >= 12) {
-        years++
-        months -= 12
-      }
-      setBeforeAfter(true)
     }
-    setUntilEvent([years, months, days, hours, minutes])
   }
 
   const onSubmit = (data) => {
-    let userAge = diffDates(new Date(data.currentDate), new Date(data.birthDate))
     let currentDate = set(new Date(data.currentDate), { hours: getHours(new Date()), minutes: getMinutes(new Date()) })
-    let valuableEvent = set(new Date(), {year: getYear(new Date(data.valuableEventDate)), month: getMonth(new Date(data.valuableEventDate)), date: getDate(new Date(data.valuableEventDate)),
-                                         hours: data.valuableEventTime.split(":")[0], minutes: data.valuableEventTime.split(":")[1]})
+    let valuableEvent = set(new Date(), {
+      year: getYear(new Date(data.valuableEventDate)), month: getMonth(new Date(data.valuableEventDate)), date: getDate(new Date(data.valuableEventDate)),
+      hours: data.valuableEventTime.split(":")[0], minutes: data.valuableEventTime.split(":")[1]
+    })
     timeCounter(currentDate, valuableEvent)
-    if (userAge > 0 && userAge < 130) {
-      setAge(userAge)
-      setIsSubmited(true)
-    }
+    setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate)))
+    setIsSubmited(true)
     setEventName(data.valuableEventName)
   }
   return (
@@ -97,8 +101,7 @@ export default function App() {
             return messages
               ? Object.entries(messages).map(([type, message]) => (
                 <p key={type}>{message}</p>
-              ))
-              : null;
+              )) : null;
           }}
         />
         <label htmlFor='currentDate'>Current date</label>
@@ -116,8 +119,7 @@ export default function App() {
             return messages
               ? Object.entries(messages).map(([type, message]) => (
                 <p key={type}>{message}</p>
-              ))
-              : null;
+              )) : null;
           }}
         />
         <label htmlFor='valuableEvent'>Event</label>
@@ -127,14 +129,14 @@ export default function App() {
           <span>Время</span>
         </div>
         <div className='valuableEvent'>
-          <input {...register("valuableEventName", 
-                {required: "This input is required."})} type='text'/>
-          <input {...register("valuableEventDate", 
-                {required: "This input is required."})} type='date'/>
-          <input {...register("valuableEventTime", 
-                {required: "This input is required."})} type='time'/>
+          <input {...register("valuableEventName",
+            { required: "This input is required." })} type='text' />
+          <input {...register("valuableEventDate",
+            { required: "This input is required." })} type='date' />
+          <input {...register("valuableEventTime",
+            { required: "This input is required." })} type='time' />
         </div>
-        
+
         <input type="submit" />
         <input
           type="button"
@@ -148,7 +150,7 @@ export default function App() {
           value="Reset inputs"
         />
       </form>
-      {isSubmited && <UserInfo age={age} untilEvent={untilEvent} beforeAfter={beforeAfter} eventName={eventName}/>}
+      {isSubmited && <UserInfo age={age} untilEvent={untilEvent} beforeAfter={beforeAfter} eventName={eventName} />}
     </>
   );
 }

@@ -1,16 +1,18 @@
 import React from 'react';
 
-let UserInfo = (props) => {
+export let UserInfo = (props) => {
+    let {days = 0, hours, minutes, months = 0, years = 0} = props.untilEvent
     return( 
     <>
-
-        <h1>Возраст пользователя: {props.age} years</h1>
+        
         <h1>
-            {props.beforeAfter && `До события "${props.eventName}" осталось: ${props.untilEvent[0]} years, ${props.untilEvent[1]} months, ${props.untilEvent[2]} days, ${props.untilEvent[3]} hours: ${props.untilEvent[4]} minutes`} 
-            {!props.beforeAfter && `После события "${props.eventName}" прошло: ${props.untilEvent[0]} years, ${props.untilEvent[1]} months, ${props.untilEvent[2]} days, ${props.untilEvent[3]} hours: ${props.untilEvent[4]} minutes`} 
+            {props.age>0 && `Возраст пользователя: ${props.age} years`}
+            {props.age<=0 && `Введена некорректная дата рождения - возраст должен превышать 1 год`}
+        </h1>
+        <h1>
+            {props.beforeAfter && `До события "${props.eventName}" осталось: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
+            {!props.beforeAfter && `После события "${props.eventName}" прошло: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
         </h1>
     </>
     )
 }
-
-export default UserInfo;

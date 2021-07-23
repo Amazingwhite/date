@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserInfo } from "./components/UserInfo";
 import { ErrorMessage } from "@hookform/error-message";
-import { getMinutes, getHours, getMonth, getYear, isAfter, set, differenceInMinutes, differenceInHours,  getDate } from 'date-fns'
+import { getMinutes, getHours, getMonth, getYear, isAfter, set, differenceInMinutes, differenceInHours,  getDate, addMinutes } from 'date-fns'
 import './App.css'
 
 export default function App() {
@@ -15,63 +15,30 @@ export default function App() {
   const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
 
   const timeCounter = (date1, date2) => {
-    let firstDate = new Date(date1)
-    let secondDate = new Date(date2)
-
+    let firstDate = new Date(date1);
+    let secondDate = new Date(date2);
     if (isAfter(firstDate, secondDate)) {
-      if (differenceInMinutes(firstDate, secondDate) < 1440) {
-        let diffHours = differenceInHours(firstDate, secondDate)
-        let diffMinutes = differenceInMinutes(firstDate, secondDate) - diffHours * 60 +1
-        if(diffMinutes === 60) {
-          diffHours++
-          diffMinutes=0
-        }
-        setUntilEvent({hours: diffHours, minutes: diffMinutes})
+        let diff = set(new Date(), 
+          {year: getYear(firstDate) - getYear(secondDate), month: getMonth(firstDate) - getMonth(secondDate),
+          date: getDate(firstDate) - getDate(secondDate), hours: getHours(firstDate) - getHours(secondDate),
+          minutes: getMinutes(firstDate) - getMinutes(secondDate)})
+
+        differenceInMinutes(firstDate, secondDate) < 1439 
+        ? setUntilEvent({hours: getHours(diff), minutes: getMinutes(diff)})
+        : setUntilEvent({years: getYear(diff),months: getMonth(diff),days: getDate(diff),hours: getHours(diff),minutes: getMinutes(diff)})
         setBeforeAfter(false)
-      } else {
-        let diff = set(new Date(), {
-          year: getYear(firstDate) - getYear(secondDate),
-          month: getMonth(firstDate) - getMonth(secondDate),
-          date: getDate(firstDate) - getDate(secondDate),
-          hours: getHours(firstDate) - getHours(secondDate),
-          minutes: getMinutes(firstDate) - getMinutes(secondDate)
-        })
-        setUntilEvent({
-          years: getYear(diff),
-          months: getMonth(diff),
-          days: getDate(diff),
-          hours: getHours(diff),
-          minutes: getMinutes(diff)
-        })
-        setBeforeAfter(false)
-      }
-      
     } else {
-      if (differenceInMinutes(secondDate, firstDate) < 1440) {
-        let diffHours = differenceInHours(secondDate, firstDate)
-        let diffMinutes = differenceInMinutes(secondDate, firstDate) - diffHours * 60
-        setUntilEvent({hours: diffHours, minutes: diffMinutes})
+        let diff = set(new Date(), 
+          {year: getYear(secondDate) - getYear(firstDate), month: getMonth(secondDate) - getMonth(firstDate),
+          date: (getDate(secondDate) - getDate(firstDate)), hours: getHours(secondDate) - getHours(firstDate),
+          minutes: getMinutes(secondDate) - getMinutes(firstDate)})
+
+        differenceInMinutes(secondDate, firstDate) < 1439
+        ? setUntilEvent({hours: getHours(diff), minutes: getMinutes(diff)})
+        : setUntilEvent({years: getYear(diff),months: getMonth(diff),days: getDate(diff),hours: getHours(diff),minutes: getMinutes(diff)})
         setBeforeAfter(true)
-      } else {
-        let diff = set(new Date(), {
-          year: getYear(secondDate) - getYear(firstDate),
-          month: getMonth(secondDate) - getMonth(firstDate),
-          date: (getDate(secondDate) - getDate(firstDate)),
-          hours: getHours(secondDate) - getHours(firstDate),
-          minutes: getMinutes(secondDate) - getMinutes(firstDate)
-        })
-        setUntilEvent({
-          years: getYear(diff),
-          months: getMonth(diff),
-          days: getDate(diff),
-          hours: getHours(diff),
-          minutes: getMinutes(diff)
-        })
-        setBeforeAfter(true)
-      }
     }
   }
-
   const onSubmit = (data) => {
     let currentDate = set(new Date(data.currentDate), { hours: getHours(new Date()), minutes: getMinutes(new Date()) })
     let valuableEvent = set(new Date(), {

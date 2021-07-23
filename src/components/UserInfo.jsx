@@ -1,17 +1,16 @@
 import React from 'react';
 
 export let UserInfo = (props) => {
-    let {days = 0, hours, minutes, months = 0, years = 0} = props.untilEvent
+    let {age, beforeAfter, eventName, untilEvent: {days = 0, hours, minutes, months = 0, years = 0}} = props
     return( 
     <>
-        
         <h1>
-            {props.age>0 && `Возраст пользователя: ${props.age} years`}
-            {props.age<=0 && `Введена некорректная дата рождения - возраст должен превышать 1 год`}
+            {age>0 && `Возраст пользователя: ${age} years`}
+            {age<=0 && `Введена некорректная дата рождения - возраст должен превышать 1 год`}
         </h1>
         <h1>
-            {props.beforeAfter && `До события "${props.eventName}" осталось: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
-            {!props.beforeAfter && `После события "${props.eventName}" прошло: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
+            {beforeAfter && `До события "${eventName}" осталось: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
+            {!beforeAfter && `После события "${eventName}" прошло: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`} 
         </h1>
     </>
     )

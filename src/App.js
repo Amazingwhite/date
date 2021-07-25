@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserInfo } from "./components/UserInfo";
 import { ErrorMessage } from "@hookform/error-message";
-import { getMinutes, getHours, getMonth, getYear, isAfter, set, differenceInMinutes, differenceInHours,  getDate, addMinutes } from 'date-fns'
+import moment from 'moment';
 import './App.css'
 
 export default function App() {
@@ -15,35 +15,41 @@ export default function App() {
   const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
 
   const timeCounter = (date1, date2) => {
-    let firstDate = new Date(date1);
-    let secondDate = new Date(date2);
-    if (isAfter(firstDate, secondDate)) {
-        let diff = set(new Date(), 
-          {year: getYear(firstDate) - getYear(secondDate), month: getMonth(firstDate) - getMonth(secondDate),
-          date: getDate(firstDate) - getDate(secondDate), hours: getHours(firstDate) - getHours(secondDate),
-          minutes: getMinutes(firstDate) - getMinutes(secondDate)})
-
-        differenceInMinutes(firstDate, secondDate) < 1439 
-        ? setUntilEvent({hours: getHours(diff), minutes: getMinutes(diff)})
-        : setUntilEvent({years: getYear(diff),months: getMonth(diff),days: getDate(diff),hours: getHours(diff),minutes: getMinutes(diff)})
+    let firstDate = moment(date1)
+    let secondDate = moment(date2)
+    if(firstDate > secondDate) {
+      let diffDate = moment().set({
+        year: firstDate.get('year') - secondDate.get('year'), 
+        month: firstDate.get('month') - secondDate.get('month'),
+        date: firstDate.get('date') - secondDate.get('date'),
+        hour: firstDate.get('hour') - secondDate.get('hour'),
+        minute: firstDate.get('minute') - secondDate.get('minute'),})
+        firstDate.diff(secondDate, 'minute') < 1440
+        ? setUntilEvent({hours: diffDate.get('hour'),minutes: diffDate.get('minute')})
+        : setUntilEvent({years: diffDate.get('year'),months: diffDate.get('month'),days: diffDate.get('date'),hours: diffDate.get('hour'),minutes: diffDate.get('minute')})
         setBeforeAfter(false)
     } else {
-        let diff = set(new Date(), 
-          {year: getYear(secondDate) - getYear(firstDate), month: getMonth(secondDate) - getMonth(firstDate),
-          date: (getDate(secondDate) - getDate(firstDate)), hours: getHours(secondDate) - getHours(firstDate),
-          minutes: getMinutes(secondDate) - getMinutes(firstDate)})
+      let diffDate = moment().set({
+        year: secondDate.get('year') - firstDate.get('year'), 
+        month: secondDate.get('month') - firstDate.get('month'),
+        date: secondDate.get('date') - firstDate.get('date'),
+        hour: secondDate.get('hour') - firstDate.get('hour'),
+        minute: secondDate.get('minute') - firstDate.get('minute'),})
 
-        differenceInMinutes(secondDate, firstDate) < 1439
-        ? setUntilEvent({hours: getHours(diff), minutes: getMinutes(diff)})
-        : setUntilEvent({years: getYear(diff),months: getMonth(diff),days: getDate(diff),hours: getHours(diff),minutes: getMinutes(diff)})
+        secondDate.diff(firstDate, 'minute') < 1440 
+        ? setUntilEvent({hours: diffDate.get('hour'),minutes: diffDate.get('minute')})
+        : setUntilEvent({years: diffDate.get('year'),months: diffDate.get('month'),days: diffDate.get('date'),hours: diffDate.get('hour'),minutes: diffDate.get('minute')})
         setBeforeAfter(true)
     }
   }
   const onSubmit = (data) => {
-    let currentDate = set(new Date(data.currentDate), { hours: getHours(new Date()), minutes: getMinutes(new Date()) })
-    let valuableEvent = set(new Date(), {
-      year: getYear(new Date(data.valuableEventDate)), month: getMonth(new Date(data.valuableEventDate)), date: getDate(new Date(data.valuableEventDate)),
-      hours: data.valuableEventTime.split(":")[0], minutes: data.valuableEventTime.split(":")[1]
+    let currentDate = moment(data.currentDate).set({hour: moment().get('hour'), minute: moment().get('minute')})
+    let valuableEvent = moment().set({
+      year: moment(data.valuableEventDate).get('year'),
+      month: moment(data.valuableEventDate).get('month'),
+      date: moment(data.valuableEventDate).get('date'),
+      hour: data.valuableEventTime.split(":")[0],
+      minute: data.valuableEventTime.split(":")[1]
     })
     timeCounter(currentDate, valuableEvent)
     setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate)))

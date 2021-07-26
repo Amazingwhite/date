@@ -13,12 +13,13 @@ export default function App() {
   const { register, control, formState: { errors }, handleSubmit, reset } = useForm({
     criteriaMode: "all",
     defaultValues: {
-      events: [{ eventName: "some name", eventDate: new Date(), eventTime: 0 }]
+      events: [{ eventName: "some name", eventDate: "", eventTime: "" }]
     }
   });
   const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
   const { fields, append } = useFieldArray({control, name: "events"});
   const timeCounter = (date1, date2) => {
+
     let firstDate = moment(date1)
     let secondDate = moment(date2)
     if (firstDate > secondDate) {
@@ -129,7 +130,7 @@ export default function App() {
         <button
           type="button"
           onClick={() => {
-            append({ eventName: "appendEventName", eventDate: "appendEventDate", eventTime: "appendEventTime" });
+            append({ eventName: "appendEventName", eventDate: "", eventTime: "" });
           }}>
           Add Event
         </button>
@@ -141,6 +142,8 @@ export default function App() {
               birthDate: "",
               currentDate: "",
               valuableEvent: "",
+              events: [{eventName: "some name", eventDate: "", eventTime: ""}]
+              
             })}
           value="Reset inputs"
         />

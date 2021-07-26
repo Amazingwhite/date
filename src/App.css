@@ -134,7 +134,7 @@ button {
   color: #FFF;
 }
 
-.valuableEvent input[type="date"], input[type="text"], input[type="time"] {
+.valuableEvent input{
   margin-left: 5px;
   height: 40px;
 }

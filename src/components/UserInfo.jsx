@@ -1,6 +1,7 @@
 import React from 'react';
 
 export let UserInfo = (props) => {
+    // console.log(props);
     let {age, beforeAfter, eventName, untilEvent: {days = 0, hours, minutes, months = 0, years = 0}} = props
     return( 
     <>

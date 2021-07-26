@@ -10,8 +10,6 @@ export default function App() {
   let [isSubmited, setIsSubmited] = useState(false);
   let [age, setAge] = useState(0);
   let [untilEvent, setUntilEvent] = useState([]);
-  let [beforeAfter, setBeforeAfter] = useState(true)
-  let [eventName, setEventName] = useState('')
   const { register, control, formState: { errors }, handleSubmit, reset } = useForm({
     criteriaMode: "all",
     defaultValues: {
@@ -19,12 +17,7 @@ export default function App() {
     }
   });
   const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
-  const { fields, append } = useFieldArray({
-    control,
-    name: "events"
-  });
-
-
+  const { fields, append } = useFieldArray({control, name: "events"});
   const timeCounter = (date1, date2) => {
     let firstDate = moment(date1)
     let secondDate = moment(date2)
@@ -36,11 +29,9 @@ export default function App() {
         hour: firstDate.get('hour') - secondDate.get('hour'),
         minute: firstDate.get('minute') - secondDate.get('minute')
       })
-      allDiffs.push(diffDate)
       firstDate.diff(secondDate, 'minute') < 1440
-        ? setUntilEvent({ hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-        : setUntilEvent({ years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-      setBeforeAfter(false)
+      ? allDiffs.push({beforeAfter: false, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
+      : allDiffs.push({beforeAfter: false, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
     } else {
       let diffDate = moment().set({
         year: secondDate.get('year') - firstDate.get('year'),
@@ -49,15 +40,11 @@ export default function App() {
         hour: secondDate.get('hour') - firstDate.get('hour'),
         minute: secondDate.get('minute') - firstDate.get('minute'),
       })
-      allDiffs.push(diffDate)
       secondDate.diff(firstDate, 'minute') < 1440
-        ? setUntilEvent({ hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-        : setUntilEvent({ years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-      setBeforeAfter(true)
+        ? allDiffs.push({beforeAfter: true, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
+        : allDiffs.push({beforeAfter: true, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
     }
   }
-
-
   const onSubmit = (data) => {
     let currentDate = moment(data.currentDate).set({ hour: moment().get('hour'), minute: moment().get('minute') })
     data.events.forEach((i) => {
@@ -68,17 +55,13 @@ export default function App() {
         hour: i.eventTime.split(":")[0],
         minute: i.eventTime.split(":")[1]
       })
-      // console.log(`Current date: ${currentDate}`);
-      // console.log(`Event date: ${valuableEvent}`);
       timeCounter(currentDate, valuableEvent)
-      // console.log(allDiffs);
-      setEventName(i.eventName)
+      allDiffs[allDiffs.length-1].eventName = i.eventName;
     })
     setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate)))
+    setUntilEvent(allDiffs)
     setIsSubmited(true)
   }
-
-
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -119,7 +102,6 @@ export default function App() {
           }}
         />
         <label htmlFor='valuableEvent'>Events</label>
-
         {fields.map((item, index) => {
           return (
             <li className='valuableEvent' key={item.id}>
@@ -141,17 +123,14 @@ export default function App() {
                 name={`events[${index}].eventTime`}
                 defaultValue={`${item.eventTime}`}
               />
-              
             </li>
           );
         })}
-
         <button
           type="button"
           onClick={() => {
             append({ eventName: "appendEventName", eventDate: "appendEventDate", eventTime: "appendEventTime" });
-          }}
-        >
+          }}>
           Add Event
         </button>
         <input type="submit" />
@@ -162,12 +141,11 @@ export default function App() {
               birthDate: "",
               currentDate: "",
               valuableEvent: "",
-            })
-          }
+            })}
           value="Reset inputs"
         />
       </form>
-      {isSubmited && <UserInfo age={age} untilEvent={untilEvent} beforeAfter={beforeAfter} eventName={eventName} />}
+      {isSubmited && <UserInfo age={age} untilEvent={untilEvent} />}
     </>
   );
 }

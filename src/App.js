@@ -16,39 +16,14 @@ export default function App() {
       events: [{ eventName: "some name", eventDate: "", eventTime: "" }]
     }
   });
-  const diffDates = (d1, d2) => Math.floor((d1 - d2) / (365.25 * 24 * 60 * 60 * 1000));
   const { fields, append } = useFieldArray({control, name: "events"});
   const timeCounter = (date1, date2) => {
-
-    let firstDate = moment(date1)
-    let secondDate = moment(date2)
-    if (firstDate > secondDate) {
-      // let diffDate = moment().set({
-      //   year: firstDate.get('year') - secondDate.get('year'),
-      //   month: firstDate.get('month') - secondDate.get('month'),
-      //   date: firstDate.get('date') - secondDate.get('date'),
-      //   hour: firstDate.get('hour') - secondDate.get('hour'),
-      //   minute: firstDate.get('minute') - secondDate.get('minute')
-      // })
-      const diffDate = moment(moment(firstDate).diff(secondDate));
-      // https://momentjs.com/docs/#/displaying/
-      firstDate.diff(secondDate, 'minute') < 1440 // Вот эту историю можно хранить как-то иначе) 
-      // Собственно можно вообще сразу собрать строку и ее сюда пушить
-      // Чтобы не раскидывать сначала по часам, дням и т.д., а потом обратно не собирать
-      ? allDiffs.push({beforeAfter: false, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-      : allDiffs.push({beforeAfter: false, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
+    if (moment(date1) > moment(date2)) {
+      const diffDate = moment.duration(moment(date1).diff(moment(date2))).add(1, 'minutes')
+      allDiffs.push({ beforeAfter: false, years: diffDate.years(), months: diffDate.months(), days: diffDate.days(), hours: diffDate.hours(), minutes: diffDate.minutes() })
     } else {
-      // let diffDate = moment().set({
-      //   year: secondDate.get('year') - firstDate.get('year'),
-      //   month: secondDate.get('month') - firstDate.get('month'),
-      //   date: secondDate.get('date') - firstDate.get('date'),
-      //   hour: secondDate.get('hour') - firstDate.get('hour'),
-      //   minute: secondDate.get('minute') - firstDate.get('minute'),
-      // })
-      const diffDate = moment(moment(firstDate).diff(secondDate));
-      secondDate.diff(firstDate, 'minute') < 1440
-        ? allDiffs.push({beforeAfter: true, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
-        : allDiffs.push({beforeAfter: true, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
+      const diffDate = moment.duration(moment(date2).diff(moment(date1)))
+      allDiffs.push({ beforeAfter: true, years: diffDate.years(), months: diffDate.months(), days: diffDate.days(), hours: diffDate.hours(), minutes: diffDate.minutes() })
     }
   }
   const onSubmit = (data) => {
@@ -64,7 +39,7 @@ export default function App() {
       timeCounter(currentDate, valuableEvent)
       allDiffs[allDiffs.length-1].eventName = i.eventName;
     })
-    setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate))) // здесь можно было бы использовать метод .diff() 
+    setAge(moment(data.currentDate).diff(data.birthDate, 'year')) 
     setUntilEvent(allDiffs)
     setIsSubmited(true)
   }
@@ -87,8 +62,7 @@ export default function App() {
               ? Object.entries(messages).map(([type, message]) => (
                 <p key={type}>{message}</p>
               )) : null;
-          }}
-        />
+          }}/>
         <label htmlFor='currentDate'>Current date</label>
         <input type='date' {...register("currentDate", {
           maxLength: {
@@ -105,8 +79,7 @@ export default function App() {
               ? Object.entries(messages).map(([type, message]) => (
                 <p key={type}>{message}</p>
               )) : null;
-          }}
-        />
+          }}/>
         <label htmlFor='valuableEvent'>Events</label>
         {fields.map((item, index) => {
           return (
@@ -115,20 +88,17 @@ export default function App() {
                 {...register(`events.${index}.eventName`)}
                 type='text'
                 name={`events[${index}].eventName`}
-                defaultValue={`${item.eventName}`}
-              />
+                defaultValue={`${item.eventName}`}/>
               <input
                 {...register(`events.${index}.eventDate`)}
                 type='date'
                 name={`events[${index}].eventDate`}
-                defaultValue={`${item.eventDate}`}
-              />
+                defaultValue={`${item.eventDate}`}/>
               <input
                 {...register(`events.${index}.eventTime`)}
                 type='time'
                 name={`events[${index}].eventTime`}
-                defaultValue={`${item.eventTime}`}
-              />
+                defaultValue={`${item.eventTime}`}/>
             </li>
           );
         })}
@@ -148,10 +118,8 @@ export default function App() {
               currentDate: "",
               valuableEvent: "",
               events: [{eventName: "some name", eventDate: "", eventTime: ""}]
-              
             })}
-          value="Reset inputs"
-        />
+          value="Reset inputs"/>
       </form>
       {isSubmited && <UserInfo age={age} untilEvent={untilEvent} />}
     </>

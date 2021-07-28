@@ -4,17 +4,17 @@ export let UserInfo = (props) => {
     let {age, untilEvent} = props
     return( 
     <>
-        <h1>
-            {age>0 && `Возраст пользователя: ${age} years`}
-            {age<=0 && `Введена некорректная дата рождения - возраст должен превышать 1 год`}
-        </h1>
-        {untilEvent.map(i => {
+        <h1>{age > 0 ? `Возраст пользователя: ${age} years` : `Введена некорректная дата рождения - возраст должен превышать 1 год`}</h1>
+        {untilEvent.map((i, index) => {
             let {years = 0, months = 0, days = 0, hours, minutes, eventName, beforeAfter} = i
-            if(beforeAfter) {
-                return <h1 >{`До события "${eventName}" осталось: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`}</h1>
-            } else {
-                return <h1>{`После события "${eventName}" прошло: ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`}</h1>
-            }
+            return (
+                <h1 key={index}>
+                    {`${beforeAfter 
+                    ? `До события "${eventName}" осталось: ` 
+                    : `После события "${eventName}" прошло: `}
+                    ${years} years, ${months} months, ${days} days, ${hours} hours: ${minutes} minutes`}
+                </h1>
+            )
         })}
     </>
     )

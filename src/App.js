@@ -1,7 +1,7 @@
 import React from "react";
 import { Form } from "./components/Form";
 import { Route } from "react-router";
-import Calculator  from "./components/Calculator";
+import {Calculator}  from "./components/Calculator";
 import { Redirect } from "react-router-dom";
 
 export default function App() {

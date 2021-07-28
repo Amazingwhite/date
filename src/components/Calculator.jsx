@@ -1,44 +1,9 @@
-import { Button, makeStyles } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import Slider from '@material-ui/core/Slider';
 import { useState } from 'react';
 import '../styles/Calculator.css';
 
-const useStyles = makeStyles({
-    sliderButton: {
-        color: 'rgba(0, 0, 0, 0.87)',
-        padding: 0,
-        minWidth: 0,
-        boxSizing: 'border-box',
-        margin: 4,
-        fontSize: 11,
-        backgroundColor: 'rgba(21, 34, 66, 0.06)',
-        borderRadius: 16
-    },
-    applyButton: {
-        backgroundColor: '#0468FF',
-        color: '#fff',
-        height: 48,
-        fontSize: 14,
-        font: 'Lato, Roboto, Arial, sans-serif',
-        fontWeight: 'bold',
-        '&:hover': {
-            backgroundColor: '#0248b2'
-        }
-    },
-    switchCalculatorButton: {
-        padding: '6px 8 px',
-        fontWeight: 400,
-        color: '#0468FF',
-        flexGrow: 1,
-        fontSize: 14,
-        lineHeight: '22px'
-    }
-});
-
-export default function Calculator() {
-
-    const styles = useStyles();
-
+export const  Calculator = () => {
     const [estateValue, setEstateValue] = useState(500000);
     const [firstDepositValue, setFirstDepositValue] = useState(0);
     const [loanPeriorValue, setLoanPeriorValue] = useState(1);
@@ -55,9 +20,7 @@ export default function Calculator() {
     if (loanPeriorValue < 1) setLoanPeriorValue(1);
     if (interestRateValue < 1) setInterestRateValue(1);
 
-    const numberWithSpaces = (x) => {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    };
+    const numberWithSpaces = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
     const isStartsWithZero = (event) => {
         event.target.value = Number.parseInt(event.target.value.toString());
@@ -78,49 +41,31 @@ export default function Calculator() {
         +event.target.value >= 99999999 ? setEstateValue(99999999) : setEstateValue(+event.target.value);
     };
 
-    const handleFirstDepositSliderChange = (event, newFirstDepositValue) => {
-        setFirstDepositValue(newFirstDepositValue);
-    };
+    const handleFirstDepositSliderChange = (event, newFirstDepositValue) => setFirstDepositValue(newFirstDepositValue);
 
-    const handleFirstDepositInputChange = (event) => { 
-        +event.target.value > estateValue - 500000 ? setFirstDepositValue(estateValue - 500000) : setFirstDepositValue(+event.target.value);
-    };
+    const handleFirstDepositInputChange = (event) => +event.target.value > estateValue - 500000 ? setFirstDepositValue(estateValue - 500000) : setFirstDepositValue(+event.target.value);
 
-    const firstDepositPercentCounter = (event) => {
-        setFirstDepositValue((estateValue - 500000) * event.currentTarget.value)
-    };
+    const firstDepositPercentCounter = (event) => setFirstDepositValue((estateValue - 500000) * event.currentTarget.value)
 
-    const handleLoanPeriorSliderChange = (event, newLoanPeriodValue) => {
-        setLoanPeriorValue(newLoanPeriodValue);
-    };
+    const handleLoanPeriorSliderChange = (event, newLoanPeriodValue) => setLoanPeriorValue(newLoanPeriodValue);
 
-    const handleLoanPeriodInputChange = (event) => {
-        +event.target.value > 30 ? setLoanPeriorValue(30) : setLoanPeriorValue(+event.target.value);
-    };
+    const handleLoanPeriodInputChange = (event) => +event.target.value > 30 ? setLoanPeriorValue(30) : setLoanPeriorValue(+event.target.value);
 
-    const changeLoanPeriod = (event) => {
-        setLoanPeriorValue(+event.currentTarget.value);
-    };
+    const changeLoanPeriod = (event) => setLoanPeriorValue(+event.currentTarget.value);
 
-    const handleInterestRateSliderChange = (event, newInterestRateValue) => {
-        setInterestRateValue(newInterestRateValue);
-    };
+    const handleInterestRateSliderChange = (event, newInterestRateValue) => setInterestRateValue(newInterestRateValue);
 
-    const handleInterestRateInputChange = (event) => {
-        +event.target.value > 30 ? setInterestRateValue(30):setInterestRateValue(+event.target.value);
-    };
+    const handleInterestRateInputChange = (event) => +event.target.value > 30 ? setInterestRateValue(30):setInterestRateValue(+event.target.value);
 
-    const changeInterestRate = (event) => {
-        setInterestRateValue(+event.currentTarget.value);
-    };
+    const changeInterestRate = (event) => setInterestRateValue(+event.currentTarget.value);
 
     return (
             <div className='container'>
                 <div className='leftPanel'>
                     <div className='switchCalculator'>
-                        <Button className={styles.switchCalculatorButton}>Недвижимость</Button>
-                        <Button className={styles.switchCalculatorButton}>Кредит</Button>
-                        <Button className={styles.switchCalculatorButton}>Платеж</Button>
+                        <Button className='switchCalculatorButton'>Недвижимость</Button>
+                        <Button className='switchCalculatorButton'>Кредит</Button>
+                        <Button className='switchCalculatorButton'>Платеж</Button>
                     </div>
 
                     <div className='estateCost'>
@@ -158,12 +103,12 @@ export default function Calculator() {
                             value={firstDepositValue <= estateValue - 500000 ? firstDepositValue : estateValue - 500000} />
 
                         <div className='firstDepositButtons'>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0}>0%</Button>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0.1}>10%</Button>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0.15}>15%</Button>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0.2}>20%</Button>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0.25}>25%</Button>
-                            <Button className={styles.sliderButton} onClick={firstDepositPercentCounter} value={0.3}>30%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0}>0%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.1}>10%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.15}>15%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.2}>20%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.25}>25%</Button>
+                            <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.3}>30%</Button>
                         </div>
                     </div>
 
@@ -184,10 +129,10 @@ export default function Calculator() {
                             value={loanPeriorValue} />
 
                         <div className='loanPeriodButtons'>
-                            <Button className={styles.sliderButton} onClick={changeLoanPeriod} value={5}>5 лет</Button>
-                            <Button className={styles.sliderButton} onClick={changeLoanPeriod} value={10}>10 лет</Button>
-                            <Button className={styles.sliderButton} onClick={changeLoanPeriod} value={15}>15 лет</Button>
-                            <Button className={styles.sliderButton} onClick={changeLoanPeriod} value={20}>20 лет</Button>
+                            <Button className='sliderButton' onClick={changeLoanPeriod} value={5}>5 лет</Button>
+                            <Button className='sliderButton' onClick={changeLoanPeriod} value={10}>10 лет</Button>
+                            <Button className='sliderButton' onClick={changeLoanPeriod} value={15}>15 лет</Button>
+                            <Button className='sliderButton' onClick={changeLoanPeriod} value={20}>20 лет</Button>
                         </div>
                     </div>
 
@@ -208,11 +153,11 @@ export default function Calculator() {
                             value={interestRateValue} />
 
                         <div className='loanPeriodButtons'>
-                            <Button className={styles.sliderButton} onClick={changeInterestRate} value={4.5}>4,5%</Button>
-                            <Button className={styles.sliderButton} onClick={changeInterestRate} value={6}>6%</Button>
-                            <Button className={styles.sliderButton} onClick={changeInterestRate} value={7.5}>7,5%</Button>
-                            <Button className={styles.sliderButton} onClick={changeInterestRate} value={9.1}>9,1%</Button>
-                            <Button className={styles.sliderButton} onClick={changeInterestRate} value={10}>10%</Button>
+                            <Button className='sliderButton' onClick={changeInterestRate} value={4.5}>4,5%</Button>
+                            <Button className='sliderButton' onClick={changeInterestRate} value={6}>6%</Button>
+                            <Button className='sliderButton' onClick={changeInterestRate} value={7.5}>7,5%</Button>
+                            <Button className='sliderButton' onClick={changeInterestRate} value={9.1}>9,1%</Button>
+                            <Button className='sliderButton' onClick={changeInterestRate} value={10}>10%</Button>
                         </div>
                     </div>
                 </div>
@@ -249,7 +194,7 @@ export default function Calculator() {
                         </div>
                     </div>
                     
-                    <Button href='http://www.yandex.ru' variant='contained' className={styles.applyButton}>
+                    <Button href='http://www.yandex.ru' variant='contained' className='applyButton'>
                         Подать заявку онлайн
                     </Button>
                 </div>

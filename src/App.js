@@ -23,24 +23,29 @@ export default function App() {
     let firstDate = moment(date1)
     let secondDate = moment(date2)
     if (firstDate > secondDate) {
-      let diffDate = moment().set({
-        year: firstDate.get('year') - secondDate.get('year'),
-        month: firstDate.get('month') - secondDate.get('month'),
-        date: firstDate.get('date') - secondDate.get('date'),
-        hour: firstDate.get('hour') - secondDate.get('hour'),
-        minute: firstDate.get('minute') - secondDate.get('minute')
-      })
-      firstDate.diff(secondDate, 'minute') < 1440
+      // let diffDate = moment().set({
+      //   year: firstDate.get('year') - secondDate.get('year'),
+      //   month: firstDate.get('month') - secondDate.get('month'),
+      //   date: firstDate.get('date') - secondDate.get('date'),
+      //   hour: firstDate.get('hour') - secondDate.get('hour'),
+      //   minute: firstDate.get('minute') - secondDate.get('minute')
+      // })
+      const diffDate = moment(moment(firstDate).diff(secondDate));
+      // https://momentjs.com/docs/#/displaying/
+      firstDate.diff(secondDate, 'minute') < 1440 // Вот эту историю можно хранить как-то иначе) 
+      // Собственно можно вообще сразу собрать строку и ее сюда пушить
+      // Чтобы не раскидывать сначала по часам, дням и т.д., а потом обратно не собирать
       ? allDiffs.push({beforeAfter: false, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
       : allDiffs.push({beforeAfter: false, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
     } else {
-      let diffDate = moment().set({
-        year: secondDate.get('year') - firstDate.get('year'),
-        month: secondDate.get('month') - firstDate.get('month'),
-        date: secondDate.get('date') - firstDate.get('date'),
-        hour: secondDate.get('hour') - firstDate.get('hour'),
-        minute: secondDate.get('minute') - firstDate.get('minute'),
-      })
+      // let diffDate = moment().set({
+      //   year: secondDate.get('year') - firstDate.get('year'),
+      //   month: secondDate.get('month') - firstDate.get('month'),
+      //   date: secondDate.get('date') - firstDate.get('date'),
+      //   hour: secondDate.get('hour') - firstDate.get('hour'),
+      //   minute: secondDate.get('minute') - firstDate.get('minute'),
+      // })
+      const diffDate = moment(moment(firstDate).diff(secondDate));
       secondDate.diff(firstDate, 'minute') < 1440
         ? allDiffs.push({beforeAfter: true, hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
         : allDiffs.push({beforeAfter: true, years: diffDate.get('year'), months: diffDate.get('month'), days: diffDate.get('date'), hours: diffDate.get('hour'), minutes: diffDate.get('minute') })
@@ -59,7 +64,7 @@ export default function App() {
       timeCounter(currentDate, valuableEvent)
       allDiffs[allDiffs.length-1].eventName = i.eventName;
     })
-    setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate)))
+    setAge(diffDates(new Date(data.currentDate), new Date(data.birthDate))) // здесь можно было бы использовать метод .diff() 
     setUntilEvent(allDiffs)
     setIsSubmited(true)
   }

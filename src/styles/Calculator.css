@@ -1,0 +1,96 @@
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.container {
+    width: 970px;
+    height: 700px;
+    display: flex;
+    justify-content: space-around;
+    background-color: #f1f2f4;
+    margin: 100px auto;
+}
+
+.leftPanel {
+    width: 384px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.switchCalculator {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+}
+
+.rightPanel {
+    width: 296px;
+    display: flex;
+    flex-direction: column;
+}
+
+.estateCost,
+.firstDeposit,
+.loanPeriod {
+    margin: 8;
+}
+
+.estateCostText {
+    display: block;
+}
+
+.estateInput,
+.firstDepositInput,
+.loanPeriodInput,
+.interestRateInput {
+    width: 100%;
+    border: 1px solid #CED1D7;
+    height: 40px;
+    outline: none;
+    padding: 9px 12px;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: Lato,Arial,sans-serif;
+    line-height: 22px;
+    border-radius: 4px;
+}
+
+.firstDepositButtons {
+    margin: 8px 0 0 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.firstDepositPercentButton,
+.loanPeriodButton {
+    min-width: 0;
+    margin: 4px;
+    font-size: 12px;
+    line-height: 18px;
+    background-color: rgba(21, 34, 66, 0.06);
+}
+
+.rightPanelElement {
+    margin: 6px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.rightPanelNumber {
+    color: #152242;
+    font-size: 16px;
+    line-height: 22px;
+}
+
+.monthlyPaymentCounter {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.monthlyPaymentCounter h1 {
+    margin: 0;
+}

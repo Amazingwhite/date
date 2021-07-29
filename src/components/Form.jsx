@@ -46,9 +46,9 @@ export const Form = (props) => {
     }
     return (
       <>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor='birthDate'>Birth date</label>
-          <input type='date' {...register("birthDate", {
+        <form className='inputForm' onSubmit={handleSubmit(onSubmit)}>
+          <label className='inputHeader' htmlFor='birthDate'>Birth date</label>
+          <input className='formInput' type='date' {...register("birthDate", {
             maxLength: {
               value: 10,
               message: 'Max year is 9999'
@@ -61,11 +61,11 @@ export const Form = (props) => {
             render={({ messages }) => {
               return messages
                 ? Object.entries(messages).map(([type, message]) => (
-                  <p key={type}>{message}</p>
+                  <p className='errorText' key={type}>{message}</p>
                 )) : null;
             }}/>
-          <label htmlFor='currentDate'>Current date</label>
-          <input type='date' {...register("currentDate", {
+          <label className='inputHeader' htmlFor='currentDate'>Current date</label>
+          <input className='formInput' type='date' {...register("currentDate", {
             maxLength: {
               value: 10,
               message: 'Max year is 9999'
@@ -78,24 +78,27 @@ export const Form = (props) => {
             render={({ messages }) => {
               return messages
                 ? Object.entries(messages).map(([type, message]) => (
-                  <p key={type}>{message}</p>
+                  <p className='errorText' key={type}>{message}</p>
                 )) : null;
             }}/>
-          <label htmlFor='valuableEvent'>Events</label>
+          <label className='inputHeader' htmlFor='valuableEvent'>Events</label>
           {fields.map((item, index) => {
             return (
               <li className='valuableEvent' key={item.id}>
                 <input
+                  className='formInput'
                   {...register(`events.${index}.eventName`)}
                   type='text'
                   name={`events[${index}].eventName`}
                   defaultValue={`${item.eventName}`}/>
                 <input
+                  className='formInput'
                   {...register(`events.${index}.eventDate`)}
                   type='date'
                   name={`events[${index}].eventDate`}
                   defaultValue={`${item.eventDate}`}/>
                 <input
+                  className='formInput'
                   {...register(`events.${index}.eventTime`)}
                   type='time'
                   name={`events[${index}].eventTime`}
@@ -104,14 +107,16 @@ export const Form = (props) => {
             );
           })}
           <button
+            className='formButton'
             type="button"
             onClick={() => {
               append({ eventName: "appendEventName", eventDate: "", eventTime: "" });
             }}>
             Add Event
           </button>
-          <input type="submit" />
+          <input className='formInput' type="submit" />
           <input
+            className='formInput'
             type="button"
             onClick={() =>
               reset({
@@ -123,6 +128,7 @@ export const Form = (props) => {
             value="Reset inputs"/>
             <Link to="/calculator">
             <input 
+              className='formInput'
               type="button"
               value="Залезть в долги" />
             </Link>

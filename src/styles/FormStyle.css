@@ -5,12 +5,12 @@ body {
       sans-serif;
   }
   
-  form {
+  .inputForm {
     max-width: 500px;
     margin: 50px auto;
   }
   
-  h1 {
+  .eventHeader {
     font-weight: 100;
     color: white;
     text-align: center;
@@ -24,16 +24,16 @@ body {
     margin: 0 auto;
   }
   
-  p {
+  .errorText {
     color: #bf1650;
   }
   
-  p::before {
+  .errorText::before {
     display: inline;
     content: "⚠ ";
   }
   
-  input {
+  .formInput {
     display: block;
     box-sizing: border-box;
     width: 100%;
@@ -44,7 +44,7 @@ body {
     font-size: 14px;
   }
   
-  label {
+  .inputHeader {
     line-height: 2;
     text-align: left;
     display: block;
@@ -55,8 +55,8 @@ body {
     font-weight: 200;
   }
   
-  button[type="submit"],
-  input[type="submit"] {
+  .formButton[type="submit"],
+  .formInput[type="submit"] {
     background: #ec5990;
     color: white;
     text-transform: uppercase;
@@ -68,31 +68,31 @@ body {
     letter-spacing: 10px;
   }
   
-  button[type="submit"]:hover,
-  input[type="submit"]:hover {
+  .formButton[type="submit"]:hover,
+  .formInput[type="submit"]:hover {
     background: #bf1650;
   }
   
-  button[type="submit"]:active,
-  input[type="button"]:active,
-  input[type="submit"]:active {
+  .formButton[type="submit"]:active,
+  .formInput[type="button"]:active,
+  .formInput[type="submit"]:active {
     transition: 0.3s all;
     transform: translateY(3px);
     border: 1px solid transparent;
     opacity: 0.8;
   }
   
-  input:disabled {
+  .formInput:disabled {
     opacity: 0.4;
   }
   
-  input[type="button"]:hover {
+  .formInput[type="button"]:hover {
     transition: 0.3s all;
   }
   
-  button[type="submit"],
-  input[type="button"],
-  input[type="submit"] {
+  .formButton[type="submit"],
+  .formInput[type="button"],
+  .formInput[type="submit"] {
     -webkit-appearance: none;
   }
   
@@ -101,7 +101,7 @@ body {
     margin: 0 auto;
   }
   
-  button[type="button"] {
+  .formButton[type="button"] {
     display: block;
     appearance: none;
     background: #333;
@@ -112,11 +112,7 @@ body {
     border-radius: 4px;
   }
   
-  hr {
-    margin-top: 30px;
-  }
-  
-  button {
+  .formButton {
     display: block;
     appearance: none;
     margin-top: 40px;

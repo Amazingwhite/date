@@ -1,6 +1,7 @@
 import { Button } from '@material-ui/core';
 import Slider from '@material-ui/core/Slider';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../styles/Calculator.css';
 
 export const  Calculator = () => {
@@ -20,11 +21,9 @@ export const  Calculator = () => {
     if (loanPeriorValue < 1) setLoanPeriorValue(1);
     if (interestRateValue < 1) setInterestRateValue(1);
 
-    const numberWithSpaces = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+    const numberWithSpaces = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-    const isStartsWithZero = (event) => {
-        event.target.value = Number.parseInt(event.target.value.toString());
-    };
+    const isStartsWithZero = (event) => event.target.value = Number.parseInt(event.target.value.toString());
 
     const isValidEstateValue = (event) => {
         if (estateValue < 500000) setEstateValue(500000);
@@ -42,21 +41,13 @@ export const  Calculator = () => {
     };
 
     const handleFirstDepositSliderChange = (event, newFirstDepositValue) => setFirstDepositValue(newFirstDepositValue);
-
     const handleFirstDepositInputChange = (event) => +event.target.value > estateValue - 500000 ? setFirstDepositValue(estateValue - 500000) : setFirstDepositValue(+event.target.value);
-
     const firstDepositPercentCounter = (event) => setFirstDepositValue((estateValue - 500000) * event.currentTarget.value)
-
     const handleLoanPeriorSliderChange = (event, newLoanPeriodValue) => setLoanPeriorValue(newLoanPeriodValue);
-
     const handleLoanPeriodInputChange = (event) => +event.target.value > 30 ? setLoanPeriorValue(30) : setLoanPeriorValue(+event.target.value);
-
     const changeLoanPeriod = (event) => setLoanPeriorValue(+event.currentTarget.value);
-
     const handleInterestRateSliderChange = (event, newInterestRateValue) => setInterestRateValue(newInterestRateValue);
-
     const handleInterestRateInputChange = (event) => +event.target.value > 30 ? setInterestRateValue(30):setInterestRateValue(+event.target.value);
-
     const changeInterestRate = (event) => setInterestRateValue(+event.currentTarget.value);
 
     return (
@@ -67,7 +58,6 @@ export const  Calculator = () => {
                         <Button className='switchCalculatorButton'>Кредит</Button>
                         <Button className='switchCalculatorButton'>Платеж</Button>
                     </div>
-
                     <div className='estateCost'>
                         <p>Стоимость недвижимости</p>
                         <input className='estateInput' 
@@ -84,7 +74,6 @@ export const  Calculator = () => {
                             onChange={handleEstateSliderChange}
                             value={estateValue} />
                     </div>
-
                     <div className='firstDeposit'>
                         <p>Первоначальный взнос</p>
                         <input
@@ -101,7 +90,6 @@ export const  Calculator = () => {
                             defaultValue={0}
                             onChange={handleFirstDepositSliderChange}
                             value={firstDepositValue <= estateValue - 500000 ? firstDepositValue : estateValue - 500000} />
-
                         <div className='firstDepositButtons'>
                             <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0}>0%</Button>
                             <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.1}>10%</Button>
@@ -111,7 +99,6 @@ export const  Calculator = () => {
                             <Button className='sliderButton' onClick={firstDepositPercentCounter} value={0.3}>30%</Button>
                         </div>
                     </div>
-
                     <div className='loanPeriod'>
                         <p>Срок кредита</p>
                         <input className='loanPeriodInput'
@@ -127,7 +114,6 @@ export const  Calculator = () => {
                             defaultValue={1}
                             onChange={handleLoanPeriorSliderChange}
                             value={loanPeriorValue} />
-
                         <div className='loanPeriodButtons'>
                             <Button className='sliderButton' onClick={changeLoanPeriod} value={5}>5 лет</Button>
                             <Button className='sliderButton' onClick={changeLoanPeriod} value={10}>10 лет</Button>
@@ -135,7 +121,6 @@ export const  Calculator = () => {
                             <Button className='sliderButton' onClick={changeLoanPeriod} value={20}>20 лет</Button>
                         </div>
                     </div>
-
                     <div className='interestRate'>
                         <p>Процентная ставка</p>
                         <input className='interestRateInput'
@@ -151,7 +136,6 @@ export const  Calculator = () => {
                             defaultValue={1}
                             onChange={handleInterestRateSliderChange}
                             value={interestRateValue} />
-
                         <div className='loanPeriodButtons'>
                             <Button className='sliderButton' onClick={changeInterestRate} value={4.5}>4,5%</Button>
                             <Button className='sliderButton' onClick={changeInterestRate} value={6}>6%</Button>
@@ -172,31 +156,31 @@ export const  Calculator = () => {
                             <p>{numberWithSpaces(estateValue - firstDepositValue)} ₽</p>
                         </div>
                     </div>
-
                     <div className='rightPanelElement'>
                         <p>Проценты</p>
                         <div >
                             <p>{numberWithSpaces(percents)} ₽</p>
                         </div>
                     </div>
-
                     <div className='rightPanelElement'>
                         <p>Проценты+кредит</p>
                         <div >
                             <p>{numberWithSpaces(estateValue - firstDepositValue + percents)} ₽</p>
                         </div>
                     </div>
-
                     <div className='rightPanelElement'>
                         <p>Необходимый доход</p>
                         <div >
                             <p>{numberWithSpaces(minIncome)}</p>
                         </div>
                     </div>
-                    
-                    <Button href='http://www.yandex.ru' variant='contained' className='applyButton'>
+                    <Button href='http://www.yandex.ru' target='_blank' variant='contained' className='applyButton'>
                         Подать заявку онлайн
                     </Button>
+                    <br />
+                    <Link to='/date' >
+                        <Button variant='contained' className='applyButton'>Go back</Button>
+                    </Link>
                 </div>
             </div>
     );

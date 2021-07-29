@@ -94,36 +94,3 @@ input::-webkit-inner-spin-button {
 .monthlyPaymentCounter h1 {
     margin: 0;
 }
-
-.sliderButton {
-    color: 'rgba(0, 0, 0, 0.87)';
-    padding: 0;
-    min-Width: 0;
-    box-sizing: 'border-box';
-    margin: 4px;
-    font-size: 11px;
-    background-color: 'rgba(21, 34, 66, 0.06)';
-    border-radius: 16px;
-}
-
-.applyButton {
-    background-color: '#0468FF';
-    color: '#fff';
-    height: 48px;
-    font-size: 14px;
-    font: 'Lato, Roboto, Arial, sans-serif';
-    font-weight: 'bold';
-}
-
-.applyButton:hover {
-    background-color: #0248b2;
-}
-
-.switchCalculatorButton {
-    padding: 6px 8px;
-    font-weight: 400;
-    color: '#0468FF';
-    flex-grow: 1;
-    font-size: 14px;
-    line-height: 22px;
-}

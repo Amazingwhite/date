@@ -9,7 +9,7 @@ input::-webkit-inner-spin-button {
     display: flex;
     justify-content: space-around;
     background-color: #f1f2f4;
-    margin: 100px auto;
+    margin: 100px auto 0 auto;
 }
 
 .leftPanel {
@@ -93,4 +93,11 @@ input::-webkit-inner-spin-button {
 
 .monthlyPaymentCounter h1 {
     margin: 0;
+}
+
+.journalTitle {
+    color: #152242;
+    font-size: 22px;
+    font-weight: bold;
+    margin-left: 35px;
 }

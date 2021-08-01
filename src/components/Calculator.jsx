@@ -1,17 +1,9 @@
-import { Button, makeStyles, Tab, Tabs } from '@material-ui/core';
+import { Button, makeStyles} from '@material-ui/core';
 import Slider from '@material-ui/core/Slider';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Calculator.css';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import moment from 'moment';
-
+import { PaymentList } from './PaymentList';
 
 const useStyles = makeStyles({
     sliderButton: {
@@ -44,20 +36,14 @@ const useStyles = makeStyles({
         color: '#0468FF',
         flexGrow: 1,
         fontSize: 14
-    },
-    tableContainer: {
-        width: 970,
-        margin: 'auto'
     }
 })
-
 export const Calculator = () => {
-    const styles = useStyles()
+    const styles = useStyles();
     const [estateValue, setEstateValue] = useState(500000);
     const [firstDepositValue, setFirstDepositValue] = useState(0);
     const [loanPeriodValue, setLoanPeriodValue] = useState(1);
     const [interestRateValue, setInterestRateValue] = useState(1);
-    const [tableValue, setTableValue] = useState(null)
 
     let monthlyRate = interestRateValue / 12 / 100;
     let loanPeriodMonths = (loanPeriodValue * 12);
@@ -65,36 +51,8 @@ export const Calculator = () => {
     let monthlyPayment = ((estateValue - firstDepositValue) * monthlyRate * (totalBid / (totalBid - 1)));
     let percents = Math.round((monthlyPayment * loanPeriodMonths - (estateValue - firstDepositValue)));
     let minIncome = Math.round(((estateValue - firstDepositValue + percents) / 12) * 1.667);
-    const numberWithSpaces = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    const columns = [
-        { id: 'index', label: '№' },
-        { id: 'paymentDate', label: 'Дата платежа'},
-        { id: 'debt', label: 'Задолженность'},
-        { id: 'percents',label: 'Погашение процентов'},
-        { id: 'netDebt',label: 'Погашение основного долга'},
-        { id: 'paymentAmount',label: 'Сумма платежа'}
-    ];
-    function createData(index, paymentDate, debt, percents, netDebt, paymentAmount) {
-        return { index, paymentDate, debt, percents, netDebt, paymentAmount };
-    }
-    const rows = [];
-    let totalPrice = estateValue
-    if(loanPeriodValue > 0 && interestRateValue > 0 ){
-        for(let i =1; i<=loanPeriodMonths; i++) {
-            let monthlyDebtMinus = (monthlyPayment - (totalPrice * interestRateValue/100/12))
-            let monthlyPercentMinus = (totalPrice * interestRateValue/100/12)
-            rows.push(createData(
-                i, 
-                `${moment().set('date', 1).add('month', i).format("DD.MM.YYYY")}`, 
-                `${numberWithSpaces(totalPrice.toFixed() - monthlyDebtMinus.toFixed())} ₽`, 
-                `${numberWithSpaces(monthlyPercentMinus.toFixed())} ₽`, 
-                `${numberWithSpaces(monthlyDebtMinus.toFixed())} ₽`,
-                `${numberWithSpaces(monthlyPayment.toFixed())} ₽`))
-            totalPrice -= monthlyDebtMinus
-        }
-    }
+    // const numberWithSpaces = x => x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
-    const tableClickHandler = (e, val) => tableValue === 0 ? setTableValue(null) : setTableValue(val)
     if (firstDepositValue < 0) setFirstDepositValue(0);
     if (loanPeriodValue < 0) setLoanPeriodValue(0);
     if (interestRateValue < 0) setInterestRateValue(0);
@@ -119,7 +77,7 @@ export const Calculator = () => {
             ? setFirstDepositValue(estateValue - 500000)
             : setFirstDepositValue(+event.target.value);
     };
-    const firstDepositPercentCounter = (event) => setFirstDepositValue((estateValue - 500000) * event.currentTarget.value)
+    const firstDepositPercentCounter = (event) => setFirstDepositValue((estateValue >500000 ? estateValue * event.currentTarget.value : 0).toFixed())
     const handleLoanPeriorSliderChange = (event, newLoanPeriodValue) => setLoanPeriodValue(newLoanPeriodValue);
     const handleLoanPeriodInputChange = (event) => {
         +event.target.value > 30
@@ -233,30 +191,30 @@ export const Calculator = () => {
                 <div className='rightPanel'>
                     <p>Ваш ежемесячный платеж</p>
                     <div className='monthlyPaymentCounter'>
-                        <h1>{loanPeriodValue > 0 && interestRateValue > 0 ? numberWithSpaces(monthlyPayment.toFixed()) : '41 893'} ₽</h1>
+                        <h1>{loanPeriodValue > 0 && interestRateValue > 0 ? Number(monthlyPayment.toFixed()).toLocaleString() : '41 893'} ₽</h1>
                     </div>
                     <div className='rightPanelElement'>
                         <p>Кредит</p>
                         <div >
-                            <p>{loanPeriodValue > 0 && interestRateValue > 0   ? numberWithSpaces(estateValue - firstDepositValue) : '500 000'} ₽</p>
+                            <p>{loanPeriodValue > 0 && interestRateValue > 0   ? (estateValue - firstDepositValue).toLocaleString() : '500 000'} ₽</p>
                         </div>
                     </div>
                     <div className='rightPanelElement'>
                         <p>Проценты</p>
                         <div >
-                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? numberWithSpaces(percents) : '2 712'} ₽</p>
+                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? Number(percents).toLocaleString() : '2 712'} ₽</p>
                         </div>
                     </div>
                     <div className='rightPanelElement'>
                         <p>Проценты+кредит</p>
                         <div >
-                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? numberWithSpaces(estateValue - firstDepositValue + percents) : '502 712'} ₽</p>
+                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? (estateValue - firstDepositValue + percents).toLocaleString() : '502 712'} ₽</p>
                         </div>
                     </div>
                     <div className='rightPanelElement'>
                         <p>Необходимый доход</p>
                         <div >
-                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? numberWithSpaces(minIncome) : '69 835'} ₽</p>
+                            <p>{loanPeriodValue > 0 && interestRateValue > 0  ? Number(minIncome).toLocaleString() : '69 835'} ₽</p>
                         </div>
                     </div>
                     <Button href='http://www.yandex.ru' target='_blank' variant='contained' className={styles.applyButton}>
@@ -268,55 +226,13 @@ export const Calculator = () => {
                     </Link>
                 </div>
             </div>
-            <Tabs value={tableValue} onChange={tableClickHandler}>
-                <Tab label='График платежей'></Tab>
-            </Tabs>
-            <TabPanel value={tableValue} index={0}>
-                <Paper>
-                    <TableContainer className={styles.tableContainer}>
-                        <Table stickyHeader aria-label="sticky table" >
-                            <TableHead >
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.map((row) => {
-                                    return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                            {columns.map((column) => {
-                                                const value = row[column.id];
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                                                    </TableCell>
-                                                );
-                                            })}
-                                        </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Paper>
-            </TabPanel>
+            <PaymentList monthlyPayment={monthlyPayment}
+                         loanPeriodValue={loanPeriodValue}
+                         estateValue={estateValue}
+                         interestRateValue={interestRateValue}
+                         loanPeriodMonths={loanPeriodMonths}
+                         firstDepositValue={firstDepositValue} />
         </>
     );
 }
 
-let TabPanel = (props) => {
-    const {children, value, index} = props;
-    return(
-        <div>
-            {
-                value===index && (
-                    <>{children} </>
-                )
-            }
-        </div>
-    )
-}

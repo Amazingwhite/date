@@ -19,6 +19,7 @@ export const Form = (props) => {
     });
     const { fields, append } = useFieldArray({control, name: "events"});
     const timeCounter = (date1, date2) => {
+      console.log(date2.diff(date1, 'days'));
       if (moment(date1) > moment(date2)) {
         const diffDate = moment.duration(moment(date1).diff(moment(date2))).add(1, 'minutes')
         allDiffs.push({ beforeAfter: false, years: diffDate.years(), months: diffDate.months(), days: diffDate.days(), hours: diffDate.hours(), minutes: diffDate.minutes() })
